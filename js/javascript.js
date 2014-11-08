@@ -7,7 +7,6 @@ $(document).ready(function(){
   var easy_button = $('#easy')
   var med_button = $('#medium')
   var hard_button = $('#hard')
-  var check_arr = []
   var button_click;
   var temp_but;
   table.hide();
@@ -33,18 +32,18 @@ function getRandomArbitrary(min, max) {
 
 var game_start = function(button, array){ //just need to be able to change min,max
   button.click(function(){
-    // var count = Math.floor(getRandomArbitrary(0,6)) // correct for real fucntion
-    var count = 0 // test count for check function
+    var count = Math.floor(getRandomArbitrary(0,6)) // correct for real fucntion
+    // var count = 0 // test count for check function
      $(".game td").each(function(){
       var difficulty = Math.floor(getRandomArbitrary(3,6))
       $(this).html('')
-      // if(count % difficulty === 0){
+      if(count % difficulty === 0){
         $(this).html(array[count]);
         count = count + 1
-      // }
-      //   else{
-      //   count = count + 1
-      // }
+      }
+        else{
+        count = count + 1
+      }
      })
   })
 }
@@ -60,8 +59,9 @@ var delete_item = function(button, square){ // deletes item from td's
         })
 }
 
-var check_sul = function(old_array, new_array, button){ // needs work // still not working =(
+var check_sul = function(old_array, button){ // needs work // still not working =(
   button.click(function(){
+    var new_array = []
     var arr = []
     for(i=0; i <= old_array.length -1; i++){
       arr.push(old_array[i].toString());
@@ -72,7 +72,7 @@ var check_sul = function(old_array, new_array, button){ // needs work // still n
     })
     console.log(new_array)
     console.log(arr)
-    arraysEqual(new_array, arr, successfull_game)
+    arraysEqual(new_array, arr, successfull_game, unsuccessfulL_game)
     
   })
 }
@@ -84,21 +84,30 @@ var successfull_game = function(string){
   }
 }
 
-var arraysEqual = function(arr1, arr2, callback){
+var unsuccessfulL_game = function(string){
+  if(string == 'loser!'){
+     $(".game td").each(function(){
+      if($(this).html() == ''){
+        $(this).css('background-color' , 'pink')
+      }
+    })
+  }
+}
+
+var arraysEqual = function(arr1, arr2, callback, callback2){
   var step = 0
   if(arr1.length == arr2.length){
-      console.log('they are equal')
       for(var j = 0; j <= arr2.length -1; j++){
         if(arr2[j] == arr1[j]){
           step = step + 1
-          console.log(step)
           if(step == arr2.length){
-            console.log('success')
             callback('winner!')
+          }else{
+            callback2('loser!')
           }
         }
       }
-    }
+  }
 }
 
 var add_to_square = function(square, number){ // add number to td
@@ -137,7 +146,7 @@ var valid_click = function(html){ // makes sure its can be added
 
 //funtions that start game !
 game_start($('#easy'), solution1, easy);
-check_sul(solution1, check_arr, $('#check'));
+check_sul(solution1, $('#check'));
 game_board.on('click', 'td', function(event){
     target_square = $(event.target); // td clicked
     var temp_html = target_square.html();
