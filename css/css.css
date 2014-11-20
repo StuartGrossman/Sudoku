@@ -7,3 +7,25 @@ td {
 	text-align: center; 
 	padding: 0; 
 }
+colgroup, tbody { 
+	border: solid medium; 
+}
+table { 
+	border-collapse: collapse; font-family: Calibri, sans-serif; 
+}
+body {
+	background-image: url('http://www.psdgraphics.com/file/colorful-triangles-background.jpg');
+}
+
+.highlight {
+	background-color: red;
+}
+#red{
+	color :red;
+}
+#yellow{
+	color: yellow;
+}
+td.make_red{
+	background-color: red;
+}

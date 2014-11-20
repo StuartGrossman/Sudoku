@@ -9,58 +9,75 @@ $(document).ready(function(){
   var hard_button = $('#hard')
   var button_click;
   var temp_but;
+  var ref = 0;
   table.hide();
 
 var easy = function(){
-  difficulty = getRandomArbitrary(3, 5)
   button_click = $('#easy')
-}
-
-var medium = function(){
-  difficulty = getRandomArbitrary(4, 6)
-  button_click = $('#medium')
-}
-
-var hard = function(){
-  difficulty = getRandomArbitrary(5, 7)
-  button_click = $('#hard')
-}
-
-function getRandomArbitrary(min, max) {
-  return Math.random() * (max - min) + min;
-}
-
-var game_start = function(button, array){ //just need to be able to change min,max
-  button.click(function(){
-    var count = Math.floor(getRandomArbitrary(0,6)) // correct for real fucntion
-    // var count = 0 // test count for check function
-     $(".game td").each(function(){
-      var difficulty = Math.floor(getRandomArbitrary(3,6))
-      $(this).html('')
-      if(count % difficulty === 0){
-        $(this).html(array[count]);
-        count = count + 1
-      }
-        else{
-        count = count + 1
-      }
-     })
+    button_click.click(function(){
+    game_start(solution1, 2, 5)
   })
 }
 
-var delete_item = function(button, square){ // deletes item from td's
-  var blank = ''
-        square.css('background-color', 'yellow')
-        $('#delete').click(function(){
-          if (square.length >= 1){
-            square.html(blank);
-            target_square.css('background-color' , 'white')
-          }
-        })
+var medium = function(){
+  button_click = $('#medium')
+    button_click.click(function(){
+    game_start(solution1, 4, 6)
+  })
 }
 
-var check_sul = function(old_array, button){ // needs work // still not working =(
-  button.click(function(){
+var hard = function(){
+  button_click = $('#hard')
+  button_click.click(function(){
+    game_start(solution1, 6, 8)
+  })
+}
+
+function getRandomArbitrary(min, max) { // grabs random number for difficutly measurment 
+  return Math.random() * (max - min) + min;
+}
+
+var refresher = function(count){ //method to refresh the board if game start is clicked more then once
+  if(count >= 2){
+    console.log(count)
+    location.reload();
+    window.location.reload(true)
+  }
+}
+
+var game_start = function(array, min, max){ //just need to be able to change min,max // need to select buttons // edit diff
+    // ref = ref + 1
+    // console.log(ref)
+    var count = 0 // correct for real fucntion
+    // var count = 0 // test count for check function
+     $(".game td").each(function(){
+      var difficulty = Math.floor(getRandomArbitrary(min,max))
+      $(this).html('')
+      if(count % difficulty === 0){
+        $(this).html(array[count]);
+        console.log(difficulty)
+        count = count + 1
+      }else{
+        count = count + 1
+      }
+     })
+}
+
+// method to delete items from box incase of mistakes 
+var delete_item = function(button, square){ // deletes item from td's
+  var blank = ''
+    square.css('background-color', 'yellow') // yellow selection preprs td for deletion 
+      $('#delete').click(function(){
+        if (square.length >= 1){
+            square.html(blank);
+            target_square.css('background-color' , '')
+        }
+      })
+}
+
+// method to check arrays of solution vs entered numbers 
+var check_sul = function(old_array, button){ // needs work // still not working =( // 
+  button.click(function(){ // creates two new arrays 
     var new_array = []
     var arr = []
     for(i=0; i <= old_array.length -1; i++){
@@ -68,84 +85,84 @@ var check_sul = function(old_array, button){ // needs work // still not working 
       // console.log(arr)
     }
     $(".game td").each(function(){
-        new_array.push($(this).html());
+        new_array.push($(this).html().replace('<td>', '').replace('</td>', ''));
     })
     console.log(new_array)
     console.log(arr)
-    arraysEqual(new_array, arr, successfull_game, unsuccessfulL_game)
+    arraysEqual(new_array, arr, successfull_game, unsuccessfulL_game) // checks the arrays to make sure they are equal 
     
   })
 }
-var successfull_game = function(string){
-  if(string == 'winner!'){
-  $('#sul_box').hide()
-  $('#sul_box').html('Congratulations! You have Solved the Puzzle!').css('color' , 'green');
-  $('#sul_box').fadeIn(5000)
-  }
-}
 
-var unsuccessfulL_game = function(string){
-  if(string == 'loser!'){
-     $(".game td").each(function(){
-      if($(this).html() == ''){
-        $(this).css('background-color' , 'pink')
-      }
-    })
-  }
-}
-
-var arraysEqual = function(arr1, arr2, callback, callback2){
+//method to check if two arrays are equal to eachother
+var arraysEqual = function(arr1, arr2, callback1, callback2){ // takes two functions callback/ callback2 for displaying win/lose statments
   var step = 0
   if(arr1.length == arr2.length){
-      for(var j = 0; j <= arr2.length -1; j++){
-        if(arr2[j] == arr1[j]){
-          step = step + 1
+    for(var j = 0; j <= arr2.length -1; j++){
+      if(arr2[j] == arr1[j]){
+        step = step + 1
+        console.log(step)
           if(step == arr2.length){
-            callback('winner!')
-          }else{
-            callback2('loser!')
-          }
+            callback1('winner!') // display winner
+          }else if(step <= arr2.length){
+            callback2('loser!') // display loser
+            console.log('loser')
         }
       }
+    }
   }
+}
+
+// method to display successfull game
+var successfull_game = function(string){
+  if(string == 'winner!'){
+  $('#sul_box').fadeIn(5000).html('Congratulations! You have Solved the Puzzle!').css('color' , 'green');
+  }
+  $('sul_box').fadeOut(5000);
+}
+
+// method to display unsuccessfull game
+var unsuccessfulL_game = function(string){
+  if(string == 'loser!'){
+    $('#sul_box').fadeIn(5000).html('Incorrect Solution, Please Keep trying!').css('background-color', 'black').css('color', 'purple')
+    console.log('loser')
+  }
+  $('#sul_box').fadeOut(5000);
 }
 
 var add_to_square = function(square, number){ // add number to td
-  square.html(number.clone());
+  console.log(number)
+  // var clone_num = number.clone()
+  // console.log(square.html())
+  square.html(number); // vooodoooooo in this line 'its creating <td> number <td>' in the transfur 
+  // console.log(square.html())
   table.fadeOut();
-  target_square.css("background-color", "white")
+  target_square.removeClass('make_red')
 }
 
 var valid_click = function(html){ // makes sure its can be added
-  if(html.length < 1){
-    table.fadeIn();
-    target_square.css("background-color" , "red");
-         table.delegate('td', 'click', function(e){
-          temp_space = $(e.target)
-          add_to_square(target_square, temp_space)
+  // if(event_count1 <= 1){
+    if(html.length < 1){ // checks selected square to see if it's populated with html
+      table.fadeIn(); // fade in selection table
+      target_square.addClass('make_red'); // add color to selected square, through class
+         table.delegate('td', 'click', function(e){ 
+          temp_space = $(e.target).html(); // select square from box 1-9
+          add_to_square(target_square, temp_space) // may need to select html out of target_space before it;s passed into add_to_square function
         });
-  }
-  else{
+    }
+    else{ // if square already has html, run delete item.
     delete_item($('#delete'), target_square);
-  }
+    }
+  // }else{ // attempt to keep 1 box highted red at once
+  //   target_square.removeClass('make_red')
+  // }
 }
-// var which_button = function(button){
-//   switch(button.click()){
-//     case easy_but
-//      temp_but = easy_but;
-//      break;
-//     case medium_but
-//       temp_but = medium_but;
-//       break;
-//     case hard_but 
-//       temp_but = hard_but;
-//       break;
-//   }
-// }
-
 
 //funtions that start game !
-game_start($('#easy'), solution1, easy);
+refresher(ref); // makes sure that you cant click start buttons twice
+easy();
+medium();
+hard();
 check_sul(solution1, $('#check'));
 game_board.on('click', 'td', function(event){
     target_square = $(event.target); // td clicked
