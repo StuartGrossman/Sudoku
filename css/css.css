@@ -29,3 +29,8 @@ body {
 td.make_red{
 	background-color: red;
 }
+#title{
+	font-family: "Trebuchet MS";
+	font-size: 45px;
+
+}

@@ -122,12 +122,12 @@ var successfull_game = function(string){
 }
 
 // method to display unsuccessfull game
-var unsuccessfulL_game = function(string){
+var unsuccessfulL_game = function(string){ // needs work on animation
   if(string == 'loser!'){
     $('#sul_box').fadeIn(5000).html('Incorrect Solution, Please Keep trying!').css('background-color', 'black').css('color', 'purple')
     console.log('loser')
   }
-  $('#sul_box').fadeOut(5000);
+  $('#sul_box').fadeOut(50000);
 }
 
 var add_to_square = function(square, number){ // add number to td
