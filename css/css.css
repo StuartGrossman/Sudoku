@@ -29,6 +29,9 @@ body {
 td.make_red{
 	background-color: red;
 }
+td.make_yellow{
+	background-color: yellow;
+}
 #title{
 	font-family: "Trebuchet MS";
 	font-size: 45px;
